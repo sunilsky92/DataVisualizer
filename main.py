@@ -63,7 +63,7 @@ def getMailsFromFolder(folder_name = None, subfolder_name = None):
 
 def main():
     st.title("CSV Visualization")
-    st.write("Welcome to the Dashboard")
+    st.write("Welcome to the Dashboard Developed by Sunil")
     #Sidebar
     #st.sidebar.header('API Stats Dashboard')
     #st.sidebar.text('This is a dashboard Page')
@@ -82,16 +82,17 @@ def main():
     csv_data = csv_data.fillna(0)
     # plot the graph
     if csv_data is not None and not csv_data.empty:
-        if 'Time(in CT)' not in csv_data.columns:
-            st.write("The dataset must contain a 'Time(in CT)' column.")
+        time_field = st.selectbox('Select Time Field', csv_data.columns)
+        if time_field not in csv_data.columns:
+            st.write(f"The dataset must contain a {time_field} column.")
         else:
-            selected_fields = st.multiselect('Select Columns to plot', [col for col in csv_data.columns if col not in ['Time(in CT)', 'Time', 'Pod']])
+            selected_fields = st.multiselect('Select Columns to plot', [col for col in csv_data.columns if col not in [time_field]])
             if selected_fields:
-                start_time, end_time = st.select_slider('Select Start Time', options=csv_data['Time(in CT)'].values, value=(csv_data['Time(in CT)'].values[0],csv_data['Time(in CT)'].values[-1] ))
+                start_time, end_time = st.select_slider('Select Start Time', options=csv_data[time_field].values, value=(csv_data[time_field].values[0],csv_data[time_field].values[-1] ))
                 # Filter the data
-                csv_data = csv_data[(csv_data['Time(in CT)'] >= start_time) & (csv_data['Time(in CT)'] <= end_time)]
-                plt_data = pd.DataFrame(csv_data[['Time(in CT)'] + selected_fields])
-                plt_data.set_index('Time(in CT)', inplace=True, drop=True, append=False, verify_integrity=False)
+                csv_data = csv_data[(csv_data[time_field] >= start_time) & (csv_data[time_field] <= end_time)]
+                plt_data = pd.DataFrame(csv_data[[time_field] + selected_fields])
+                plt_data.set_index(time_field, inplace=True, drop=True, append=False, verify_integrity=False)
                 #st.write(plt_data)
                 st.line_chart(plt_data, use_container_width=True, height=500, width=30)
             else:
@@ -105,6 +106,6 @@ def main():
 if __name__ == "__main__":
     # Run Steamlit App
     st.set_page_config(page_title='API Stats Dashboard', page_icon=':bar_chart:', layout='wide', initial_sidebar_state='auto')
-    st.set_option('deprecation.showfileUploaderEncoding', False)
+    #st.set_option('deprecation.showfileUploaderEncoding', False)
     st.set_option('deprecation.showPyplotGlobalUse', False)
     main()
