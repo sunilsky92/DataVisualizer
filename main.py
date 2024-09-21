@@ -107,5 +107,5 @@ if __name__ == "__main__":
     # Run Steamlit App
     st.set_page_config(page_title='API Stats Dashboard', page_icon=':bar_chart:', layout='wide', initial_sidebar_state='auto')
     #st.set_option('deprecation.showfileUploaderEncoding', False)
-    st.set_option('deprecation.showPyplotGlobalUse', False)
+    #st.set_option('deprecation.showPyplotGlobalUse', False)
     main()
